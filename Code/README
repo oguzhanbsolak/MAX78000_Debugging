@@ -1,0 +1,6 @@
+The following files are added to this repository: 
+- The dataloader (ridng_data.py)
+- The python file describing the keras network as well as the yaml file (powernet.py and poweret.yaml)
+- The generated main.c that is loaded to the MAX78000
+- The training and test data (folder: riding_data)
+- The commands I used to train, quantize, validate and synthesize the model (commands_powernet.txt)
