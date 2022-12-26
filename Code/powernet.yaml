@@ -1,0 +1,27 @@
+---
+
+arch: powernet
+dataset: riding_data
+
+# Define layer parameters in order of the layer sequence
+layers:
+  - op: mlp
+    activate: ReLU
+    flatten: true
+    out_offset: 0x4000
+    processors: 0x0000.0000.0000.0001
+    data_format: HWC
+  - op: mlp
+    activate: ReLU
+    out_offset: 0x0
+    processors: 0xffff.ffff.ffff.ffff
+  - op: mlp
+    activate: ReLU
+    out_offset: 0x4000
+    processors: 0x0000.ffff.ffff.ffff
+  - op: mlp
+    activate: None
+    out_offset: 0x0
+    output_width: 8
+    processors: 0x0000.000f.ffff.ffff
+

@@ -1,0 +1,14 @@
+Training:
+python train.py --lr 0.01 --optimizer adam --epochs 40 --batch-size 64 --deterministic --compress policies/schedule.yaml --qat-policy policies/qat_policy_memenet.yaml --model powernet --dataset riding_data --param-hist --device MAX78000 "$@"
+
+
+Quantisation:
+python quantize.py trained/PowerNet/powernet.pth.tar trained/PowerNet/powernet_trained-q.pth.tar --device MAX78000 -v "$@"
+
+Validation:
+python train.py --model powernet --dataset riding_data --evaluate --exp-load-weights-from ../ai8x-synthesis/trained/PowerNet/powernet_trained-q.pth.tar -8 --save-sample 0 --device MAX78000 "$@"
+
+C-Code Generation
+python ai8xize.py --test-dir synthed_net --prefix powernet --checkpoint-file trained/PowerNet/powernet_trained-q.pth.tar --config-file networks/powernet.yaml --sample-input tests/sample_riding_data.npy --device MAX78000 --compact-data --mexpress --timer 0 --display-checkpoint --verbose --overwrite "$@"
+
+
