@@ -1,0 +1,2 @@
+#!/bin/sh
+python train.py --lr 0.01 --optimizer adam --epochs 40 --batch-size 64 --deterministic --compress policies/schedule.yaml --qat-policy policies/qat_policy.yaml --model powernet --dataset riding_data --param-hist --device MAX78000 "$@"

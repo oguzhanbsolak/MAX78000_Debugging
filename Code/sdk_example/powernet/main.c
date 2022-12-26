@@ -33,7 +33,7 @@
 *******************************************************************************/
 
 // powernet
-// Created using ai8xize.py --test-dir synthed_net --prefix powernet --checkpoint-file trained/PowerNet/powernet_trained-q.pth.tar --config-file networks/powernet.yaml --sample-input tests/sample_riding_data.npy --device MAX78000 --compact-data --mexpress --timer 0 --display-checkpoint --verbose --overwrite
+// Created using ai8xize.py --test-dir sdk/Examples/MAX78000/CNN --prefix powernet --checkpoint-file trained/powernet_qat_best3-q.pth.tar --config-file networks/powernet.yaml --overwrite --device MAX78000 --timer 0 --display-checkpoint --verbose
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -52,8 +52,8 @@ void fail(void)
   while (1);
 }
 
-// 1-channel 1x103 data input (103 bytes / 26 32-bit words):
-// HWC 1x103, channels 0 to 0
+// 1-channel 103x1 data input (103 bytes / 26 32-bit words):
+// HWC 103x1, channels 0 to 0
 static const uint32_t input_0[] = SAMPLE_INPUT_0;
 
 void load_input(void)
@@ -87,7 +87,7 @@ int check_output(void)
   return CNN_OK;
 }
 
-static int32_t ml_data32[(CNN_NUM_OUTPUTS + 3) / 4];
+static int32_t ml_data[CNN_NUM_OUTPUTS];
 
 int main(void)
 {
@@ -120,11 +120,9 @@ int main(void)
     __WFI(); // Wait for CNN
 
   if (check_output() != CNN_OK) fail();
-  cnn_unload((uint32_t *) ml_data32);
+  cnn_unload((uint32_t *) ml_data);
 
   printf("\n*** PASS ***\n\n");
-  
-  printf("Inference Output: %i us\n\n", ml_data32);
 
 #ifdef CNN_INFERENCE_TIMER
   printf("Approximate inference time: %u us\n\n", cnn_time);

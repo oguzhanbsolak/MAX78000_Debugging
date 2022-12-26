@@ -5,6 +5,7 @@
 """
 RidingData dataset
 """
+import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
@@ -29,6 +30,7 @@ class RidingDataDataset(Dataset):
         train = pd.read_csv(os.path.join(in_data_dir, "data_MAX78000.csv"))
         self.labels = labels.to_numpy()
         self.training  = train.to_numpy()
+        
         self.data_dir = in_data_dir
         self.transform = transform
 
@@ -41,9 +43,10 @@ class RidingDataDataset(Dataset):
         t = self.training[idx, :]
         training_data = np.expand_dims(t, axis= 0)
         if self.transform:
-            training_data = self.transform(training_data)
-            label = label/(350) #expected range of labels is between 0 and 350, here it is mapped to 0 and 1
-            label = self.transform(label)
+            training_data = self.transform(torch.tensor(training_data, dtype = torch.float32))
+            #label = label/(350) #expected range of labels is between 0 and 350, here it is mapped to 0 and 1
+            #label = self.transform(torch.tensor(label, dtype = torch.float32))
+            label = torch.tensor(label/(350), dtype = torch.float32)
         return training_data, label
         
 """
@@ -56,7 +59,7 @@ def ridingdata_get_datasets(data, load_train=True, load_test=True):
 
     if load_train:
         train_transform = transforms.Compose([
-             transforms.ToTensor(),
+             #transforms.ToTensor(),
              ai8x.normalize(args=args)
         ])
         
@@ -68,7 +71,7 @@ def ridingdata_get_datasets(data, load_train=True, load_test=True):
     if load_test:
     
         test_transform = transforms.Compose([
-            transforms.ToTensor(),
+            #transforms.ToTensor(),
             ai8x.normalize(args=args)
         ])
 

@@ -5,7 +5,7 @@
 """
 PowerNet network description
 """
-from signal import pause
+#from signal import pause
 import torch
 from torch import nn
 
@@ -22,7 +22,7 @@ class PowerNet(nn.Module):
     
     def __init__(self, num_classes=None, dimensions=(1, 103), num_channels=1, bias=False, **kwargs):
         super().__init__()
-        torch.set_default_dtype(torch.float64)
+        #torch.set_default_dtype(torch.float64)
 
         # assert dimensions[0] == dimensions[1]  # Only square supported
 
